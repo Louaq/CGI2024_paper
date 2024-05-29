@@ -17,17 +17,17 @@ from utils import load_model, infer_uploaded_image, infer_uploaded_video, infer_
 
 # setting page layout
 st.set_page_config(
-    page_title="Interactive Interface for YOLOv8",
+    page_title="Agricultural Pest and Disease Detection",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
     )
 
 # main page heading
-st.title("Interactive Interface for YOLOv8")
+st.title("Agricultural Pest and Disease Detection")
 
 # sidebar
-st.sidebar.header("DL Model Config")
+st.sidebar.header("Configuration options")
 
 # model options
 task_type = st.sidebar.selectbox(
