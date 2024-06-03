@@ -1,13 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
--------------------------------------------------
-   @File Name:     utils.py
-   @Author:        Luyao.zhang
-   @Date:          2023/5/16
-   @Description:
--------------------------------------------------
-"""
 from ultralytics import YOLO
 import streamlit as st
 import cv2
@@ -30,12 +20,14 @@ def _display_detected_frames(conf, model, st_frame, image):
     # Predict the objects in the image using YOLOv8 model
     res = model.predict(image, conf=conf)
 
+
     # Plot the detected objects on the video frame
     res_plotted = res[0].plot()
+
     st_frame.image(res_plotted,
                    caption='Detected Video',
                    channels="BGR",
-                   use_column_width=True
+                   use_column_width=False
                    )
 
 
@@ -61,6 +53,9 @@ def infer_uploaded_image(conf, model):
     :param model: An instance of the `YOLOv8` class containing the YOLOv8 model.
     :return: None
     """
+    with open('classes.txt', 'r') as f:
+        classes = f.read().splitlines()
+
     source_img = st.sidebar.file_uploader(
         label="Choose an image...",
         type=("jpg", "jpeg", "png", 'bmp', 'webp')
@@ -74,8 +69,9 @@ def infer_uploaded_image(conf, model):
             # adding the uploaded image to the page with caption
             st.image(
                 image=source_img,
-                caption="Uploaded Image",
-                use_column_width=True
+                caption="上传的图像",
+                use_column_width=False,
+                width = 400
             )
 
     if source_img:
@@ -88,12 +84,15 @@ def infer_uploaded_image(conf, model):
 
                 with col2:
                     st.image(res_plotted,
-                             caption="Detected Image",
-                             use_column_width=True)
+                             caption="检测的图像",
+                             use_column_width=False,
+                             width=400
+                             )
                     try:
                         with st.expander("Detection Results"):
                             for box in boxes:
-                                st.write(box.xywh)
+                                st.write(box.xyxyn)
+
                     except Exception as ex:
                         st.write("No image is uploaded yet!")
                         st.write(ex)

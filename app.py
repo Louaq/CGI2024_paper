@@ -1,13 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
--------------------------------------------------
-   @File Name:     app.py
-   @Author:        Luyao.zhang
-   @Date:          2023/5/15
-   @Description:
--------------------------------------------------
-"""
 from pathlib import Path
 from PIL import Image
 import streamlit as st
@@ -17,17 +7,17 @@ from utils import load_model, infer_uploaded_image, infer_uploaded_video, infer_
 
 # setting page layout
 st.set_page_config(
-    page_title="Agricultural Pest and Disease Detection",
+    page_title="农田病虫害检测系统",
     page_icon="🤖",
     layout="wide",
     initial_sidebar_state="expanded"
     )
 
 # main page heading
-st.title("Agricultural Pest and Disease Detection")
+st.title("农田病虫害检测系统")
 
 # sidebar
-st.sidebar.header("Configuration options")
+st.sidebar.header("选项配置")
 
 # model options
 task_type = st.sidebar.selectbox(
@@ -58,7 +48,7 @@ else:
 model = load_model(model_path)
 
 # image/video options
-st.sidebar.header("Image/Video Config")
+st.sidebar.header("图像/视频选项")
 source_selectbox = st.sidebar.selectbox(
     "Select Source",
     config.SOURCES_LIST
