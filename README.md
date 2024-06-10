@@ -1,52 +1,55 @@
-# 说明文档
+# Documentation
 
-> 这篇文档主要介绍《基于YOLOv8的农田病虫害检测与分析》的代码实现部分，整篇论文的目的主要是改进YOLOv8的网络结构，使其在检测病虫害的精度和实时性上有所提升。接下来，我将介绍如何从零开始搭建起本项目。
+> This document mainly introduces the code implementation part of "Detecting and Analyzing
+Pests and Diseases in Agricultural Fields Based on YOLOv8".The purpose of the whole thesis is
+mainly to improve the network structure of YOLOv8, so that it can improve the accuracy and
+real-time performance in detecting pests and diseases. Next, I will describe how to build up
+this project from scratch.
 
 
+# Installing Python
 
-
-
-# 安装Python
-
-到python的官方网站：[https://www.python.org/](https://www.python.org/)下载，安装
+Go to the official python website: [https://www.python.org/](https://www.python.org/) to download and install it.
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-10-42.png)
 
 
 
-安装完成后，在命令行窗口运行：python，查看安装的结果，如下图：
+Once the installation is complete, run: python in a command line window to see the results of the 
+installation, as shown below:
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-14-22.png)
 
-至此，Python安装完成，接下来还需要安装anaconda，这是一个python虚拟环境，特别适合管理python的环境。
+At this point, the Python installation is complete, and the next step is to install anaconda, a python
+virtual environment that is particularly good for managing python
 
-# 安装anaconda
+# Installing anaconda
 
-到anaconda的官方网站：[https://www.anaconda.com/download/success](https://www.anaconda.com/download/success)下载，并安装：
+Go to anaconda's official website: [https://www.anaconda.com/download/success](https://www.anaconda.com/download/success) to download and install it:
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-17-10.png)
 
-安装成功后，会在开始菜单出现如下图所示：
+After successful installation, it will appear in the start menu as shown below:
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-19-17.png)
 
-anaconda安装完成，接下来安装pycharm，主要用来编写代码。
+anaconda installation is complete, next install pycharm, which is mainly used for writing code
 
-# 安装Pycharm
+# Installing Pycharm
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-23-47.png)
 
-学生可以申请教育版
+Students can apply for the educational version
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-24-59.png)
 
 
 
-支持，所有的软件安装完成。
+And, all software installations are complete.
 
-# YOLOv8目录结构介绍
+# Introduction to YOLOv8 Catalog Structure
 
-首先介绍整个项目的目录：
+First introduce the entire project's table of contents:
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-27-47.png)
 
@@ -54,47 +57,65 @@ anaconda安装完成，接下来安装pycharm，主要用来编写代码。
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-28-07.png)
 
-和原来的YOLOv8相比，根目录新增一些训练的脚本和测试的脚本，比如train.py和Detect.py，当然也可以直接通过命令行的方式来实现，两者效果都是一样的。
-
-> **重点是ultralytics/nn目录，所有的改进模块都是在这里进行，在这里我新建了一个Addmodules的目录，里面是改进的各种模块，包括主干网络，颈部网络和检测头的改进。**
+Compared with the original YOLOv8, the root directory adds some new training scripts and testing
+scripts, such as train.py and Detect.py, of course, you can also directly through the command line,
+both have the same effect.
+> **The focus is on the ultralytics/nn directory, where all the improvement modules are
+made, and where I have created a new Addmodules directory with the various modules
+for the improvements, including improvements to the backbone network, the neck
+network, and the detection header.**
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-36-15.png)
 
-需要修改的部分我都已经作了修改，不用再做其他的改动
+I've already made all the changes I need to make, so I don't need to make any more changes.
 
-> **还有一个重要的目录：ultralytics/cfg/models/Add，这里面放的都是yaml文件，其中改进的yaml文件都已经写好，不需要改动。**
+> **There is another important directory: ultralytics/cfg/models/Add, which holds all the yaml
+files, of which the improved yaml files are already written and do not need to be
+changed.**
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-38-32.png)
 
-以下是一个yaml文件的示例，其它的都是类似的结构，只是参数不同：
+Below is an example of a yaml file, the others are similarly structured, just with different parameters:
 
-# 安装项目的环境（非常重要）
+# Installation of the project's environment 
+(very important)
 
-> 环境配置非常重要，我当时配环境换了一周左右的时间，中间经历了各种报错，软件包不兼容的问题和显卡驱动匹配的问题，总之就是不好搞。为了方面复现工作，我已经把anaconda的环境导出为environment.yml，位于项目的根目录里面，创建虚拟环境的时候直接使用就可以
+> Environment configuration is very important, I was with the environment for about a week, in
+the middle of the experience of a variety of errors, package incompatibility problems and
+graphics card driver matching problems, in short, it is not good to get. In order to reproduce
+the work, I have exported the anaconda environment to environment.yml, located in the root
+directory of the project, and use it directly when creating the virtual environment.
 
 
 
-## anaconda虚拟环境
+## Anaconda virtual environment
 
-再anaconda prompt终端输入conda env create -f environment.yml，就可以根据environment.yml文件创建虚拟环境，创建好后，通过conda env list查看环境是否存在，如下图所示就表明创建成功：
+Then type conda env create -f environment.yml in the anaconda prompt terminal to create a virtual
+environment based on the environment.yml file. After creating the environment, check whether
+the environment exists through the conda env list, as shown in the following figure, which
+indicates that the creation is successful:
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_16-35-14.png)
 
-如果安装的时候出现torch相关的错误，大概率是你的显卡驱动和这里面的torch包版本不匹配，这个问题需要自行修改即可，网上关于这方面的资料很多。
+If there are torch-related errors when installing, the probability is that your graphics card driver
+does not match the version of the torch package in here, this problem needs to be modified on its
+own, and there is a lot of information about this on the Internet.
 
 
 
-## 使用虚拟环境
+## Using virtual environments
 
-虚拟环境创建完成之后，就可以在pycharm中使用，点击右下角，切换conda环境，选择刚才创建的虚拟环境。如果到了这一步还没有报错的话，恭喜你，已经完成了80%的工作。
+Once the virtual environment is created, you can use it in pycharm by clicking on the bottom right
+corner, switching conda environments, and selecting the virtual environment you just created. If at
+this point there is no error, congratulations, has completed 80% of the work.
 
-运行Detect.py脚本，测试检测效果，如果没有报错，接下来就是训练模型。
+Run the Detect.py script to test the detection, if no errors are reported, the next step is to train the model.
 
 
 
-# 训练脚本train.py
+# Training script train.py
 
-找到根目录的train.py文件，注释已经写的很清楚，如下图：
+Find the train.py file in the root directory, the comments have been written clearly as below:
 
 ```py
 import warnings
@@ -126,11 +147,13 @@ if __name__ == '__main__':
 
 
 
-model = YOLO('yolov8-HSFPN.yaml')，把里面的yaml文件换成自己的yaml文件，我这里用的是yolov8-HSFPN.yaml，data=r'D:/Downloads/YOLOv8/datasets/data.yaml，同理，换成自己数据集的yaml文件，我这里的数据集是yolo格式。其它的参数可以按照自己的任务自行调整。
+model = YOLO('yolov8-HSFPN.yaml'), replace the yaml file in it with your own yaml file, I am using
+yolov8- HSFPN.yaml here, data=r'D:/Downloads/YOLOv8/datasets/data.yaml, similarly, replace it with
+the yaml file of your own dataset, my dataset here is in YOLO format. Other parameters can be
+adjusted according to your task.
 
 
-
-还有一个检测的脚本，Detect.py:
+There's also a script for detecting, Detect.py: 
 
 ```python
 import warnings
@@ -147,45 +170,56 @@ if __name__ == '__main__':
                 )
 ```
 
-同理，把best.pt换成你自己训练好的模型，source里面输入检测图片的路径，运行该脚本就可以开始检测，结果保存在runs/detect目录。
+Similarly, replace best.pt with your own trained model, enter the path of the detected image
+inside source, run the script to start the detection, and save the results in the runs/detect directory.
 
 
+# Start training
 
-# 开始训练
-
-准备好数据集，最好是yolo格式的，我的数据集项目里自带了，不需要重新下载：
+Prepare the dataset, preferably in yolo format, my dataset comes with the project, no need to redownload it:
 
 <img src="https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-55-44.png" style="zoom:67%;" />
 
-datasets目录里面就是我的数据集：有train，test，valid三个目录，分别存放训练集，测试集和验证集的图像和标签：
+Inside the datasets directory is my dataset: there are three directories, TRAIN, TEST, and VALID,
+which hold the images and labels for the training, test, and validation sets, respectively
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-58-01.png)
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_15-58-32.png)
 
-准备这些之后，运行train.py文件，开始训练。如果报错的话，请自行上网查找，无非就是找不到数据集，某个包的版本不对，或者是GPU用不了，只能用CPU。
+After preparing these, run the train.py file and start training. If you get an error, look it up on the
+internet, it's just that you can't find the dataset, the version of a package is wrong, or you can't
+use the GPU, you can only use the CPU.
 
-# 训练结果
+# Training results
 
-> 训练结果会保存在runs/train目录下，exp1,exp2,exp3的顺序，表示每一次的训练结果。
+> The training results will be saved in the runs/train directory in the order of exp1,exp2,exp3, indicating 
+the results of each training
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_16-04-37.png)
 
-上图就是训练完成后目录的结构，weights目录里面就是我们需要的模型：best.pts是效果最好的，最后也是需要这个，last.pt是最后一次的训练结果。
+The picture above is the structure of the directory after the training is done, inside the weights
+directory are the models we need: best.pts is the one with the best results, and that's the one we
+need at the end, and last.pt is the result of the last training.
 
 ![](https://yangyang666.oss-cn-chengdu.aliyuncs.com/typoraImages/Snipaste_2024-05-23_16-05-47.png)
 
-# 总结
+# Summarization
 
-**整个项目的改进工作我已经做好，复现的话只需装好对应的环境，修改train.py的参数，运行train.py就可以开始训练；修改Detect.py的参数，就可以检测。目前项目只针对检测任务，对于分割和分类没有做改进。**
+**I have already done the improvement work of the whole project, if you reproduce it, you only
+need to install the corresponding environment, modify the parameters of train.py, run train.py
+tostart training; modify the parameters of Detect.py, you can detect. Currently, the project is
+only for the detection task, and no improvements have been made for segmentation and
+classification.**
 
 
 
 
 
-# 经验之谈
+# rule of thumb
 
-**（1）以下为两个重要库的版本，必须对应下载，否则会报错**
+**（1）The following are the versions of two important libraries, which must be downloaded 
+accordingly, otherwise errors will be reported**
 
 
 
@@ -198,47 +232,58 @@ datasets目录里面就是我的数据集：有train，test，valid三个目录�
 
 
 
-**（2）mmcv-full会安装失败是因为自身系统的编译工具有问题，也有可能是环境之间安装的有冲突**
+**（2）The reason why mmcv-full fails to install is because of a problem with the compilation tool on 
+your own system, or because of a conflict between the environments in which it is installed.**
 
-    推荐大家离线安装的形式,下面的地址中大家可以找找自己的版本,下载到本地进行安装。
+We recommend that you install offline in the form of the following address you can find their own version, 
+download to the local installation.
     https://download.openmmlab.com/mmcv/dist/cu111/torch1.8.0/index.html
     https://download.openmmlab.com/mmcv/dist/index.html
 
 
 
-**（3）basicsr安装失败原因,通过pip install basicsr 下载如果失败,大家可以去百度搜一下如何换下载镜像源就可以修复**
+**（3）basicsr installation failure reasons, through pip install basicsr download if it fails, you can
+go to Baidu search how to change the download mirror source can be repaired!**
 
 
 
-## 针对一些报错的解决办法在这里说一下
+## The solution to some of the reported errors is here
 
-**(1)训练过程中loss出现Nan值.**
-   可以尝试关闭AMP混合精度训练.
+**(1)Nan values appear for loss during training.**
+   Try turning off AMP mixed precision training.
 
-**(2)多卡训练问题,修改模型以后不能支持多卡训练可以尝试下面的两行命令行操作，两个是不同的操作，是代表不同的版本现尝试第一个不行用第二个**
+**(2) Multi-card training problems, after modifying the model can not support multi-card
+training you can try the following two lines of command line operations, the two are different
+operations, is on behalf of different versions now try the first one does not work with the
+second one**
 
     python -m torch.distributed.run --nproc_per_node 2 train.py
     python -m torch.distributed.launch --nproc_per_node 2 train.py
 
-**(3) 针对运行过程中的一些报错解决**
-    1.如果训练的过程中验证报错了(主要是一些形状不匹配的错误这是因为验证集的一些特殊图片导致)
-    找到ultralytics/models/yolo/detect/train.py的DetectionTrainer class中的build_dataset函数中的rect=mode == 'val'改为rect=False
-
+**(3) For the runtime of some of the error resolution**
+    1. If the validation of the training process reported an error (mainly some shape mismatch error this 
+is due to the validation of the set of some of the special pictures lead to)
+Find rect=mode in the build_dataset function in the DetectionTrainer class of 
+ultralytics/models/yolo/detect/train.py
 ```py
-2.推理的时候运行detect.py文件报了形状不匹配的错误
-找到ultralytics/engine/predictor.py找到函数def pre_transform(self, im),在LetterBox中的auto改为False
+2. Running the detect.py file while reasoning reported a shape mismatch error
+Find ultralytics/engine/predictor.py and find the function def pre_transform(self, im), 
+change auto to False in LetterBox.
 
-3.训练的过程中报错类型不匹配的问题
-找到'ultralytics/engine/validator.py'文件找到 'class BaseValidator:' 然后在其'__call__'中
-self.args.half = self.device.type != 'cpu'  # force FP16 val during training的一行代码下面加上self.args.half = False
+3. The problem of mismatched types of errors reported during the training process
+Find the file 'ultralytics/engine/validator.py' and find 'class
+BaseValidator:' and then in its 'call ' self.args.half = self.device.type ! = 'cpu' # force FP16 val during training with
+self.args.half = False below the line of code
 ```
 
-**(4) 针对yaml文件中的nc修改**
-    不用修改，模型会自动根据你数据集的配置文件获取。
-    这也是模型打印两次的区别，第一次打印出来的就是你选择模型的yaml文件结构，第二次打印的就是替换了你数据集的yaml文件，模型使用的是第二种。
+**(4) For the nc changes in the yaml file**
+No need to modify it, the model will automatically get it based on the profile of your dataset.
+This is also the difference between printing the model twice, the first printout is the structure of
+the yaml file you chose for the model, and the second printout is the yaml file that replaces your
+dataset, the model uses the second one.
 
-**(5) 针对环境的问题**
-    环境的问题每个人遇见的都不一样，可自行上网查找。
+**(5) Environment-specific issues**
+The environment is different for everyone who meets it, so you can find out for yourself online.
 
 
 
